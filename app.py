@@ -187,9 +187,8 @@ def getNameEmojiMessage():
             "index": 2,
             "productId": productId,
             "emojiId": "003"
-        },
+        }]
 
-    ]
     return message
 
 
