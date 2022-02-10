@@ -8,10 +8,10 @@ import json
 import configparser
 import os
 from urllib import parse
-
 app = Flask(__name__, static_url_path='/static')
 UPLOAD_FOLDER = 'static'
 ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -35,7 +35,7 @@ def index():
         return 'ok'
     body = request.json
     events = body["events"]
-    print("body：\t", body)
+    print(body)
     if "replyToken" in events[0]:
         payload = dict()
         replyToken = events[0]["replyToken"]
@@ -54,59 +54,61 @@ def index():
                                            getMRTVideoMessage()]
                 elif text == "台北101圖":
                     payload["messages"] = [getTaipei101ImageMessage()]
+                elif text == "台北101影片":
+                    payload["messages"] = [getMRTVideoMessage()]
                 elif text == "quoda":
                     payload["messages"] = [
-                        {
-                            "type": "text",
-                            "text": getTotalSentMessageCount()
-                        }
-                    ]
+                            {
+                                "type": "text",
+                                "text": getTotalSentMessageCount()
+                            }
+                        ]
                 elif text == "今日確診人數":
                     payload["messages"] = [
-                        {
-                            "type": "text",
-                            "text": getTodayCovid19Message()
-                        }
-                    ]
+                            {
+                                "type": "text",
+                                "text": getTodayCovid19Message()
+                            }
+                        ]
                 elif text == "主選單":
                     payload["messages"] = [
-                        {
-                            "type": "template",
-                            "altText": "This is a buttons template",
-                            "template": {
-                                "type": "buttons",
-                                "title": "Menu",
-                                "text": "Please select",
-                                "actions": [
-                                    {
+                            {
+                                "type": "template",
+                                "altText": "This is a buttons template",
+                                "template": {
+                                  "type": "buttons",
+                                  "title": "Menu",
+                                  "text": "Please select",
+                                  "actions": [
+                                      {
                                         "type": "message",
                                         "label": "我的名字",
                                         "text": "我的名字"
-                                    },
-                                    {
+                                      },
+                                      {
                                         "type": "message",
                                         "label": "今日確診人數",
                                         "text": "今日確診人數"
-                                    },
-                                    {
+                                      },
+                                      {
                                         "type": "uri",
                                         "label": "聯絡我",
                                         "uri": f"tel:{my_phone}"
-                                    }
-                                ]
+                                      }
+                                  ]
+                              }
                             }
-                        }
-                    ]
+                        ]
                 else:
                     payload["messages"] = [
-                        {
-                            "type": "text",
-                            "text": text
-                        }
-                    ]
+                            {
+                                "type": "text",
+                                "text": text
+                            }
+                        ]
                 replyMessage(payload)
             elif events[0]["message"]["type"] == "location":
-                title = events[0]["message"].get("title", "")  # 沒有title的話會使用空字串
+                title = events[0]["message"].get("title", "")
                 latitude = events[0]["message"]["latitude"]
                 longitude = events[0]["message"]["longitude"]
                 payload["messages"] = [getLocationConfirmMessage(title, latitude, longitude)]
@@ -115,11 +117,11 @@ def index():
             if "params" in events[0]["postback"]:
                 reservedTime = events[0]["postback"]["params"]["datetime"].replace("T", " ")
                 payload["messages"] = [
-                    {
-                        "type": "text",
-                        "text": F"已完成預約於{reservedTime}的叫車服務"
-                    }
-                ]
+                        {
+                            "type": "text",
+                            "text": F"已完成預約於{reservedTime}的叫車服務"
+                        }
+                    ]
                 replyMessage(payload)
             else:
                 data = json.loads(events[0]["postback"]["data"])
@@ -158,7 +160,7 @@ def pretty_echo(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text)
-    )
+        )
 
 
 @app.route("/sendTextMessageToMe", methods=['POST'])
@@ -170,8 +172,7 @@ def sendTextMessageToMe():
 def getNameEmojiMessage():
     lookUpStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     productId = "5ac21a8c040ab15980c9b43f"
-    name = "Cheris"
-
+    name = "Miles"
     message = dict()
     message["type"] = "text"
     message["text"] = "".join("$" for r in range(len(name)))
@@ -179,9 +180,9 @@ def getNameEmojiMessage():
     for i, nChar in enumerate(name):
         emojis_list.append(
             {
-                "index": i,
-                "productId": productId,
-                "emojiId": f"{lookUpStr.index(nChar) + 1 :03}"  # 補滿三位數字 0
+              "index": i,
+              "productId": productId,
+              "emojiId": f"{lookUpStr.index(nChar) + 1 :03}"
             }
         )
     message["emojis"] = emojis_list
@@ -190,79 +191,75 @@ def getNameEmojiMessage():
 
 def getCarouselMessage(data):
     message = {
-        "type": "template",
-        "altText": "this is a image carousel template",
-        "template": {
-            "type": "image_carousel",
-            "columns": [
-                {
-                    "imageUrl": F"{end_point}/static/taipei_1.jpeg",
-                    "action": {
-                        "type": "postback",
-                        "label": "台北101",
-                        "data":json.dumps(data)
-                    }
-                },
-                {
-                    "imageUrl": F"{end_point}/static/taipei_101.jpeg",
-                    "action": {
-                        "type": "postback",
-                        "label": "台北101",
-                        "data": json.dumps(data)
-                    }
+      "type": "template",
+      "altText": "this is a image carousel template",
+      "template": {
+          "type": "image_carousel",
+          "columns": [
+              {
+                "imageUrl": F"{end_point}/static/taipei_101.jpeg",
+                "action": {
+                  "type": "postback",
+                  "label": "台北101",
+                  "data": json.dumps(data)
                 }
-            ]
+              },
+              {
+                "imageUrl": F"{end_point}/static/taipei_1.jpeg",
+                "action": {
+                  "type": "postback",
+                  "label": "台北101",
+                  "data": json.dumps(data)
+                }
+              }
+          ]
+          }
         }
-    }
     return message
 
 
 def getLocationConfirmMessage(title, latitude, longitude):
-    data = {"titla": title, "latitude": latitude, "longitude": longitude, "action": "get_near"}
+    data = {'title': title, 'latitude': latitude, 'longitude': longitude,
+            'action': 'get_near'}
     message = {
-        "type": "template",
-        "altText": "this is a confirm template",
-        "template": {
-            "type": "confirm",
-            "text": F"確認是否搜尋{title}附近的地點",
-            "actions": [
-
-                {
-                    "type": "postback",
-                    "label": "是",
-                    "data": json.dumps(data),
-                    "text": "Buy"
-                }
-                ,
-                {
-                    "type": "message",
-                    "label": "否",
-                    "text": "否"
-                }
-            ]
-        }
+      "type": "template",
+      "altText": "this is a confirm template",
+      "template": {
+          "type": "confirm",
+          "text": f"確認是否搜尋 {title} 附近地點？",
+          "actions": [
+              {
+                 "type": "postback",
+               "label": "是",
+               "data": json.dumps(data),
+               },
+              {
+                "type": "message",
+                "label": "否",
+                "text": "否"
+              }
+          ]
+      }
     }
     return message
 
 
 def getCallCarMessage(data):
     message = {
-        "type": "template",
-        "altText": "this is a template",
-        "template": {
-            "type": "button",
-            "text": F"請選擇至{data['title']}預約叫車",
-            "actions": [
-
-                {
-                    "type": "datatimepicker",
-                    "label": "預約",
-                    "data": json.dumps(data),
-                    "mode": "datatime"
-                }
-
-            ]
-        }
+      "type": "template",
+      "altText": "this is a template",
+      "template": {
+          "type": "buttons",
+          "text": f"請選擇至 {data['title']} 預約叫車時間",
+          "actions": [
+              {
+               "type": "datetimepicker",
+               "label": "預約",
+               "data": json.dumps(data),
+               "mode": "datetime"
+               }
+          ]
+      }
     }
     return message
 
@@ -278,11 +275,10 @@ def getPlayStickerMessage():
 def getTaipei101LocationMessage():
     message = dict()
     message["type"] = "location"
-    message["title"] = "Taipei101 location"
+    message["title"] = "台北101"
     message["address"] = "110台北市信義區信義路五段7號"
     message["latitude"] = 25.034056468449304
     message["longitude"] = 121.56466736984362
-    # 只吃定端檔案 不知heroku的 只吃m4a格式
     return message
 
 
@@ -291,7 +287,6 @@ def getMRTVideoMessage():
     message["type"] = "video"
     message["originalContentUrl"] = F"{end_point}/static/taipei_101_video.mp4"
     message["previewImageUrl"] = F"{end_point}/static/taipei_101.jpeg"
-    # message["trackingId"] # 判斷使用者有沒有觀看完影片
     return message
 
 
@@ -320,26 +315,25 @@ def getImageMessage(originalContentUrl):
 
 
 def replyMessage(payload):
-    response = requests.post("https://api.line.me/v2/bot/message/reply", headers=HEADER, data=json.dumps(payload))
+    response = requests.post("https://api.line.me/v2/bot/message/reply",headers=HEADER,data=json.dumps(payload))
     return 'OK'
 
 
 def pushMessage(payload):
-    response = requests.post("https://api.line.me/v2/bot/message/push", headers=HEADER, data=json.dumps(payload))
+    response = requests.post("https://api.line.me/v2/bot/message/push",headers=HEADER,data=json.dumps(payload))
     return 'OK'
 
 
 def getTotalSentMessageCount():
-    response = requests.get("https://api.line.me/v2/bot/message/quota/consumption", headers=HEADER)
+    response = requests.get("https://api.line.me/v2/bot/message/quota/consumption",headers=HEADER)
     return response.json()["totalUsage"]
 
 
 def getTodayCovid19Message():
-    response = requests.get(
-        "https://covid-19.nchc.org.tw/api/covid19?CK=covid-19@nchc.org.tw&querydata=4001&limited=TWN")
+    response = requests.get("https://covid-19.nchc.org.tw/api/covid19?CK=covid-19@nchc.org.tw&querydata=4001&limited=TWN")
     date = response.json()[0]["a04"]
-    total_count = response.json()[0]["a06"]
-    count = response.json()[0]["a05"]
+    total_count = response.json()[0]["a05"]
+    count = response.json()[0]["a06"]
     return F"日期：{date}, 人數：{count}, 確診總人數：{total_count}"
 
 
@@ -364,11 +358,11 @@ def upload_file():
             print(img_path)
             payload["to"] = my_line_id
             payload["messages"] = [getImageMessage(F"{end_point}/{img_path}"),
-                                   {
-                                       "type": "text",
-                                       "text": F"年紀：{age}\n性別：{gender}"
-                                   }
-                                   ]
+                {
+                    "type": "text",
+                    "text": F"年紀：{age}\n性別：{gender}"
+                }
+            ]
             pushMessage(payload)
     return 'OK'
 
@@ -382,13 +376,12 @@ def line_login():
         if code and state:
             HEADERS = {'Content-Type': 'application/x-www-form-urlencoded'}
             url = "https://api.line.me/oauth2/v2.1/token"
-            FormData = {"grant_type": 'authorization_code', "code": code, "redirect_uri": F"{end_point}/line_login",
-                        "client_id": line_login_id, "client_secret": line_login_secret}
+            FormData = {"grant_type": 'authorization_code', "code": code, "redirect_uri": F"{end_point}/line_login", "client_id": line_login_id, "client_secret":line_login_secret}
             data = parse.urlencode(FormData)
             content = requests.post(url=url, headers=HEADERS, data=data).text
             content = json.loads(content)
             url = "https://api.line.me/v2/profile"
-            HEADERS = {'Authorization': content["token_type"] + " " + content["access_token"]}
+            HEADERS = {'Authorization': content["token_type"]+" "+content["access_token"]}
             content = requests.get(url=url, headers=HEADERS).text
             content = json.loads(content)
             name = content["displayName"]
@@ -397,7 +390,7 @@ def line_login():
             statusMessage = content["statusMessage"]
             print(content)
             return render_template('profile.html', name=name, pictureURL=
-            pictureURL, userID=userID, statusMessage=
+                                   pictureURL, userID=userID, statusMessage=
                                    statusMessage)
         else:
             return render_template('login.html', client_id=line_login_id,
