@@ -194,7 +194,26 @@ def getCarouselMessage(data):
 
 
 def getLocationConfirmMessage(title, latitude, longitude):
-    message = dict()
+    message = {
+        "type": "template",
+        "altText": "this is a confirm template",
+        "template": {
+            "type": "confirm",
+            "text": "Are you sure?",
+            "actions": [
+                {
+                    "type": "message",
+                    "label": "Yes",
+                    "text": "yes"
+                },
+                {
+                    "type": "message",
+                    "label": "No",
+                    "text": "no"
+                }
+            ]
+        }
+    }
     return message
 
 
@@ -214,7 +233,7 @@ def getPlayStickerMessage():
 def getTaipei101LocationMessage():
     message = dict()
     message["type"] = "location"
-    message["title"] = "my location"
+    message["title"] = "Taipei101 location"
     message["address"] = "110台北市信義區信義路五段7號"
     message["latitude"] = 25.034056468449304
     message["longitude"] = 121.56466736984362
