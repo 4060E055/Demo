@@ -218,6 +218,10 @@ def getTaipei101LocationMessage():
 
 def getMRTVideoMessage():
     message = dict()
+    message["type"] = "vidio"
+    message["originalContentUrl"] = F"{end_point}/static/taipei_101_video.mp4"
+    message["previewImageUrl"] = originalContentUrl
+    # message["trackingId"]
     return message
 
 
