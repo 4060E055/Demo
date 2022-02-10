@@ -168,45 +168,24 @@ def sendTextMessageToMe():
 def getNameEmojiMessage():
     lookUpStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     productId = "5ac21a8c040ab15980c9b43f"
-    # name = "Cheris"
-    #
-    # message = dict()
-    # message["type"] = "text"
-    # message["text"] = f"{name}：$ 1 $ 2 $ 3"
-    # message["emojis"] = [{
-    #     "index": 0,
-    #     "productId": productId,
-    #     "emojiId": "001"
-    # },
-    #     {
-    #         "index": 1,
-    #         "productId": productId,
-    #         "emojiId": "002"
-    #     },
-    #     {
-    #         "index": 2,
-    #         "productId": productId,
-    #         "emojiId": "003"
-    #     }]
-    emoji= [{
-        "index": 0,
-        "productId": productId,
-        "emojiId": "001"
-    },
-        {
-            "index": 1,
-            "productId": productId,
-            "emojiId": "002"
-        },
-        {
-            "index": 2,
-            "productId": productId,
-            "emojiId": "003"
-        }]
+    name = "Cheris"
 
-    message = TextSendMessage(text='$$$ 09 回覆emoji訊息', emojis=emoji)
-
+    message = dict()
+    message["type"] = "text"
+    message["text"] = "".join("$" for r in range(len(name)))
+    emojis_list = list()
+    for i, nChar in enumerate(name):
+        emojis_list.append(
+            {
+                "index": i,
+                "productId": productId,
+                "emojiId": f"{lookUpStr.index(nChar) + 1 :03}"
+            }
+        )
+    message["emojis"] = emojis_list
     return message
+
+    
 
 
 def getCarouselMessage(data):
@@ -226,7 +205,13 @@ def getCallCarMessage(data):
 
 def getPlayStickerMessage():
     message = dict()
+    message["type"] = "sticker"
+    message["packageId"] = "446"
+    message["stickerId"] = "1988"
     return message
+
+
+
 
 
 def getTaipei101LocationMessage():
