@@ -50,7 +50,7 @@ def index():
                     payload["messages"] = [getPlayStickerMessage()]
                 elif text == "台北101":
                     payload["messages"] = [getTaipei101ImageMessage(),
-                                           #getTaipei101LocationMessage(),
+                                           getTaipei101LocationMessage(),
                                            getMRTVideoMessage()]
                 elif text == "台北101圖":
                     payload["messages"] = [getTaipei101ImageMessage()]
@@ -213,6 +213,12 @@ def getPlayStickerMessage():
 
 def getTaipei101LocationMessage():
     message = dict()
+    message["type"] = "location"
+    message["title"] = "my location"
+    message["address"] = "110台北市信義區信義路五段7號"
+    message["latitude"] = 25.034056468449304
+    message["longitude"] = 121.56466736984362
+    # 只吃定端檔案 不知heroku的 只吃m4a格式
     return message
 
 
