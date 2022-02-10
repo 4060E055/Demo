@@ -179,13 +179,11 @@ def getNameEmojiMessage():
             {
                 "index": i,
                 "productId": productId,
-                "emojiId": f"{lookUpStr.index(nChar) + 1 :03}"
+                "emojiId": f"{lookUpStr.index(nChar) + 1 :03}"  # 補滿三位數字 0
             }
         )
     message["emojis"] = emojis_list
     return message
-
-    
 
 
 def getCarouselMessage(data):
@@ -209,9 +207,6 @@ def getPlayStickerMessage():
     message["packageId"] = "446"
     message["stickerId"] = "1988"
     return message
-
-
-
 
 
 def getTaipei101LocationMessage():
@@ -242,6 +237,9 @@ def getTaipei101ImageMessage(originalContentUrl=F"{end_point}/static/taipei_101.
 
 def getImageMessage(originalContentUrl):
     message = dict()
+    message["type"] = "image"
+    message["originalContentUrl"] = originalContentUrl
+    message["previewImageUrl"] = originalContentUrl
     return message
 
 
