@@ -1,4 +1,5 @@
 # LineBot
 
 新增官方帳號
-![L_gainfriends_qr](https://user-images.githubusercontent.com/37571816/153702070-767214d8-0c2f-4281-aab0-adb7dbe694c6.png)
+
+![S_gainfriends_qr](https://user-images.githubusercontent.com/37571816/153702087-0ab051c9-97a9-476e-954b-94553120ba14.png)
