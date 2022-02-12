@@ -1,4 +1,4 @@
-#To Learne LineBot
+# This repository is for learning linebot
 
 ### Add official Line account
 
